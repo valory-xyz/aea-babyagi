@@ -1,0 +1,38 @@
+name: echo
+author: fetchai
+version: 0.19.0
+type: skill
+description: The echo skill implements simple echo functionality.
+license: Apache-2.0
+aea_version: '>=1.0.0, <2.0.0'
+fingerprint:
+  README.md: bafybeiecz4czxtvzwfsfal5rtcjo4gma3ojxu3yxd7phgcfi6vfhnm622y
+  __init__.py: bafybeigqsnja54qqvj6bmxkpj27v4ejqydklqhapdui44v4qj4e3nqyw24
+  behaviours.py: bafybeigwlodaanmbtfszhvsnqwozur4dynt2q3qw6dhoyajjsnjklb2hmi
+  dialogues.py: bafybeici4rlde6qdpjtftn4xgelrrphpwzzymvhjrgua7frx7qvyw32gue
+  handlers.py: bafybeihjjglefhpwbprqu6anjpmhj3nn7p53nsci3kmueab7hnhchfcmsi
+  tests/__init__.py: bafybeidedsb72is3z5jndaoh232r7y5qvqb3acotjm6xi4pea3bmkoq6le
+  tests/test_behaviours.py: bafybeiaainn272wn52rlnuomeczgglwvvuj2mdrim3hjajuunw6d2dqnw4
+  tests/test_dialogues.py: bafybeifslpfv7xqji4zkpbqlm2ndnoixuxb23w5374npvc6sz3dmqwqqii
+  tests/test_handlers.py: bafybeih3w5m7nc3fodxlisps5azpo5jeuun223bhnwejlyfkgquy6ou5b4
+fingerprint_ignore_patterns: []
+connections: []
+contracts: []
+protocols:
+- fetchai/default:1.0.0:bafybeieqqzgzuappi2ped42upgzad5gt3mxiyjhojwibxm4o367ffsian4
+skills: []
+behaviours:
+  echo:
+    args:
+      tick_interval: 1.0
+    class_name: EchoBehaviour
+handlers:
+  echo:
+    args: {}
+    class_name: EchoHandler
+models:
+  default_dialogues:
+    args: {}
+    class_name: DefaultDialogues
+dependencies: {}
+is_abstract: false

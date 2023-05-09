@@ -1,0 +1,84 @@
+name: generic_seller
+author: fetchai
+version: 0.27.0
+type: skill
+description: The weather station skill implements the functionality to sell weather
+  data.
+license: Apache-2.0
+aea_version: '>=1.0.0, <2.0.0'
+fingerprint:
+  README.md: bafybeiazl5fv537mvhkqu2jsxhztcbe5cpa5mrdcm3xnnbinz3on3whipa
+  __init__.py: bafybeiafdr7ynn72cev3ldmh7jpm2hkavrli7fwmq5h2is6632kiaqi3qa
+  behaviours.py: bafybeic3gw4cup4c2fufetwkgv7qtyewa6xtcwntkzbd2t3y53ehrfunju
+  dialogues.py: bafybeiakiuh742hgsopjl25unyu6osnnfylhp3w2kt5a2juej3a25jbnwi
+  handlers.py: bafybeiezirvynokkyhkasjcdi6miqw7ss37gx4fohc4jiqryt3moywjnhy
+  strategy.py: bafybeia5mjxph7ui2iav5uxutwnr6q2uf4otxdge5vuk7g5ycaso3jldkm
+  tests/__init__.py: bafybeihqxdniovyormfdxlfyxosmbstbriacfo4si7gofld5fx66jwmp5a
+  tests/test_behaviours.py: bafybeihihmi2ex7praigjeqomwwli7z3nyymcvdaregrcrnwk755zn24om
+  tests/test_dialogues.py: bafybeibvhilg6cy2bupe7xvdekdflykmoqe6oo45hmm6g7mjfoemamuzs4
+  tests/test_handlers.py: bafybeiay7w3drl5tq4bnkwrnyakookgtysf4jrlbb7ukajphzj3k3eil2y
+  tests/test_models.py: bafybeihabrc22zqssit3fmqhxptosy6qz6mx65ukhf5iayvirfv42xrhoq
+fingerprint_ignore_patterns: []
+connections:
+- valory/ledger:0.19.0:bafybeicgfupeudtmvehbwziqfxiz6ztsxr5rxzvalzvsdsspzz73o5fzfi
+contracts: []
+protocols:
+- fetchai/default:1.0.0:bafybeieqqzgzuappi2ped42upgzad5gt3mxiyjhojwibxm4o367ffsian4
+- fetchai/fipa:1.0.0:bafybeiaoblqdglj4ln4otpmmsrimtxpdxqkzuhttsyabn7gi2rvzcx4pbm
+- fetchai/oef_search:1.0.0:bafybeieczka2vj76huafg3s5lwyyzvql36onzrhznfgknoo6trmpjwxfka
+- valory/ledger_api:1.0.0:bafybeibo4bdtcrxi2suyzldwoetjar6pqfzm6vt5xal22ravkkcvdmtksi
+skills: []
+behaviours:
+  service_registration:
+    args:
+      max_soef_registration_retries: 5
+      services_interval: 20
+    class_name: GenericServiceRegistrationBehaviour
+handlers:
+  fipa:
+    args: {}
+    class_name: GenericFipaHandler
+  ledger_api:
+    args: {}
+    class_name: GenericLedgerApiHandler
+  oef_search:
+    args: {}
+    class_name: GenericOefSearchHandler
+models:
+  default_dialogues:
+    args: {}
+    class_name: DefaultDialogues
+  fipa_dialogues:
+    args: {}
+    class_name: FipaDialogues
+  ledger_api_dialogues:
+    args: {}
+    class_name: LedgerApiDialogues
+  oef_search_dialogues:
+    args: {}
+    class_name: OefSearchDialogues
+  strategy:
+    args:
+      classification:
+        piece: classification
+        value: seller
+      data_for_sale:
+        generic: data
+      has_data_source: false
+      is_ledger_tx: true
+      location:
+        latitude: 51.5194
+        longitude: 0.127
+      personality_data:
+        piece: genus
+        value: data
+      service_data:
+        key: seller_service
+        value: generic_service
+      service_id: generic_service
+      unit_price: 10
+    class_name: GenericStrategy
+dependencies:
+  open-aea-ledger-fetchai:
+    version: <2.0.0,>=1.0.0
+is_abstract: true

@@ -1,0 +1,110 @@
+name: erc1155_deploy
+author: fetchai
+version: 0.30.0
+type: skill
+description: The ERC1155 deploy skill has the ability to deploy and interact with
+  the smart contract.
+license: Apache-2.0
+aea_version: '>=1.0.0, <2.0.0'
+fingerprint:
+  README.md: bafybeiae7b2hjkzsd7z2yjft37hrqt5rfct6ocrox4pna7u4ypunz7rmw4
+  __init__.py: bafybeiehln6kky4ih7d2737tb4h4ofoffixbefhmjzlpzhzpkhlpg7dww4
+  behaviours.py: bafybeibwapkjqchntzwtm5kd5bm7fjuzlt4nwgni7va3f3vltaja2brfp4
+  dialogues.py: bafybeihfhbmbjl2pddxvdveokmcdlnbb4vjab6dpd6p5kega7nts2axkde
+  handlers.py: bafybeigvir7v6ebevxrk2pfali7klthv5wxjjxwnpq27nlrjieexdd3j3e
+  strategy.py: bafybeif5eor26xfagaoy3xafmwraw74btlw3o7jv2a6hpon46x5flzt6ey
+  tests/__init__.py: bafybeig6dkwpgzga7j7xtr4m2lue5geufhea2wrhrr4t24maf3qb6f7ofq
+  tests/intermediate_class.py: bafybeihduyb3zuhtfgbi2c625gerwdumf5mdybufa4bz5rmgm2ksgpd5jq
+  tests/test_behaviours.py: bafybeieqmuwxk3f5ktmpzjdh5aow5ge7p7h7hzbhqdkmygrfzu3s4o5gu4
+  tests/test_dialogues.py: bafybeiddb5xuvxuuneuepr4nwctbn3rs6g224i3khr6vdcj6dpx2c6wbc4
+  tests/test_handlers.py: bafybeiguthsnj4huf5p7xjxw45jlzwnzgmzgzcgopipfe6fesqn6k3slsu
+  tests/test_strategy.py: bafybeigxtw2j2c7vl6xhdwos62jbtmx62xfgdyadptm5eewmkesmcooyea
+fingerprint_ignore_patterns: []
+connections:
+- valory/ledger:0.19.0:bafybeicgfupeudtmvehbwziqfxiz6ztsxr5rxzvalzvsdsspzz73o5fzfi
+contracts:
+- fetchai/erc1155:0.22.0:bafybeidjvb4ojaw2trxu4rlxq3blppfherkldwz4x5spnpvef5n34jvmmm
+protocols:
+- fetchai/default:1.0.0:bafybeieqqzgzuappi2ped42upgzad5gt3mxiyjhojwibxm4o367ffsian4
+- fetchai/fipa:1.0.0:bafybeiaoblqdglj4ln4otpmmsrimtxpdxqkzuhttsyabn7gi2rvzcx4pbm
+- fetchai/oef_search:1.0.0:bafybeieczka2vj76huafg3s5lwyyzvql36onzrhznfgknoo6trmpjwxfka
+- open_aea/signing:1.0.0:bafybeibqlfmikg5hk4phzak6gqzhpkt6akckx7xppbp53mvwt6r73h7tk4
+- valory/contract_api:1.0.0:bafybeidv6wxpjyb2sdyibnmmum45et4zcla6tl63bnol6ztyoqvpl4spmy
+- valory/ledger_api:1.0.0:bafybeibo4bdtcrxi2suyzldwoetjar6pqfzm6vt5xal22ravkkcvdmtksi
+skills: []
+behaviours:
+  service_registration:
+    args:
+      max_soef_registration_retries: 5
+      services_interval: 20
+    class_name: ServiceRegistrationBehaviour
+handlers:
+  contract_api:
+    args: {}
+    class_name: ContractApiHandler
+  fipa:
+    args: {}
+    class_name: FipaHandler
+  ledger_api:
+    args: {}
+    class_name: LedgerApiHandler
+  oef_search:
+    args: {}
+    class_name: OefSearchHandler
+  signing:
+    args: {}
+    class_name: SigningHandler
+models:
+  contract_api_dialogues:
+    args: {}
+    class_name: ContractApiDialogues
+  default_dialogues:
+    args: {}
+    class_name: DefaultDialogues
+  fipa_dialogues:
+    args: {}
+    class_name: FipaDialogues
+  ledger_api_dialogues:
+    args: {}
+    class_name: LedgerApiDialogues
+  oef_search_dialogues:
+    args: {}
+    class_name: OefSearchDialogues
+  signing_dialogues:
+    args: {}
+    class_name: SigningDialogues
+  strategy:
+    args:
+      classification:
+        piece: classification
+        value: seller
+      from_supply: 10
+      location:
+        latitude: 51.5194
+        longitude: 0.127
+      mint_quantities:
+      - 100
+      - 100
+      - 100
+      - 100
+      - 100
+      - 100
+      - 100
+      - 100
+      - 100
+      - 100
+      nb_tokens: 10
+      personality_data:
+        piece: genus
+        value: data
+      service_data:
+        key: seller_service
+        value: erc1155_contract
+      to_supply: 0
+      token_type: 2
+      value: 0
+    class_name: Strategy
+dependencies:
+  open-aea-ledger-ethereum:
+    version: <2.0.0,>=1.0.0
+is_abstract: false

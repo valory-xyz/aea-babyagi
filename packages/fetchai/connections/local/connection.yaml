@@ -1,0 +1,26 @@
+name: local
+author: fetchai
+version: 0.20.0
+type: connection
+description: The local connection provides a stub for an OEF node.
+license: Apache-2.0
+aea_version: '>=1.0.0, <2.0.0'
+fingerprint:
+  README.md: bafybeigayltuo3dejkvuqvm6cysyzw6xueha4ehgo23qv75xdavd7bik24
+  __init__.py: bafybeibojyrqpiw5xkemsnrdie572mixa5ud4sxdtmpgfutl253kj4zjga
+  connection.py: bafybeictfwockpuemdsgkn35o5bmfjmtptffb4xqd2optgyortxpkxa6yi
+  tests/__init__.py: bafybeiecschrd664thii7emksuuziz3xrporjptci4wodsgdavlzpfzhqi
+  tests/test_misc.py: bafybeidf6xwpthgubtu3bmylggzyvcfetqmp5zlbqdoqp3tes7ucdsriuu
+  tests/test_search_services.py: bafybeibcgnt5db5ms2zbshlxthzralqvmudyzy3llxurqkjg5cm7xhx56m
+fingerprint_ignore_patterns: []
+connections: []
+protocols:
+- fetchai/default:1.0.0:bafybeieqqzgzuappi2ped42upgzad5gt3mxiyjhojwibxm4o367ffsian4
+- fetchai/fipa:1.0.0:bafybeiaoblqdglj4ln4otpmmsrimtxpdxqkzuhttsyabn7gi2rvzcx4pbm
+- fetchai/oef_search:1.0.0:bafybeieczka2vj76huafg3s5lwyyzvql36onzrhznfgknoo6trmpjwxfka
+class_name: OEFLocalConnection
+config: {}
+excluded_protocols: []
+restricted_to_protocols: []
+dependencies: {}
+is_abstract: false

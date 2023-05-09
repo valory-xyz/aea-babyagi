@@ -1,0 +1,42 @@
+name: http_server
+author: fetchai
+version: 0.22.0
+type: connection
+description: The HTTP server connection that wraps http server implementing a RESTful
+  API specification.
+license: Apache-2.0
+aea_version: '>=1.0.0, <2.0.0'
+fingerprint:
+  README.md: bafybeihkuhhsdfw5qqtz2jwpfppub6yvsehzmvmaqjlxnal4v76x47mcrq
+  __init__.py: bafybeif5pkr5oarwd7yagdgn46miolmdmvgdyxv4kadgws2bf3iwshom24
+  connection.py: bafybeicvabh5c6hu6ple5s2peoj2kukxigz6z2uxcz5qo7k7sfw5ebi5sy
+  tests/__init__.py: bafybeidpthyhnhsvpixejrud77klcfkb3titlmyrssovfzt4a76dn3wnpm
+  tests/data/certs/server.crt: bafybeiev5i3xxkvn36wflf633gkumuxexsw4y2bubwbvl7edrz4igfgv34
+  tests/data/certs/server.csr: bafybeicvp7xdl5w3o4bzikkudpduitss3bpp6xqfwlxbw6kabdangohy5u
+  tests/data/certs/server.key: bafybeiabvpkpqr4fctrbssfal6pviv5otgmu32qyrfpyhcql5wgmlzjtoe
+  tests/data/petstore_sim.yaml: bafybeiaekkfxljlv57uviz4ug6isdqbzsnuxpsgy3dvhzh22daql3xh2i4
+  tests/test_http_server.py: bafybeihxrl4eqgbroqfcrnued3twwx24cfzfpuxrqkkgvirqtqhadbmxzm
+fingerprint_ignore_patterns: []
+connections: []
+protocols:
+- valory/http:1.0.0:bafybeifyoio7nlh5zzyn5yz7krkou56l22to3cwg7gw5v5o3vxwklibhty
+class_name: HTTPServerConnection
+config:
+  api_spec_path: null
+  host: 127.0.0.1
+  port: 8000
+  ssl_cert: null
+  ssl_key: null
+  target_skill_id: null
+excluded_protocols: []
+restricted_to_protocols:
+- valory/http:1.0.0
+dependencies:
+  aiohttp:
+    version: <3.8,>=3.7.4
+  openapi-core:
+    version: ==0.13.2
+  openapi-spec-validator:
+    version: ==0.2.8
+  werkzeug: {}
+is_abstract: false
