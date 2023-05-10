@@ -1,7 +1,5 @@
 from collections import deque
 import os
-import time
-from threading import Thread
 from typing import List
 import openai
 from dotenv import load_dotenv
@@ -14,8 +12,6 @@ from aea.agent import Agent
 from aea.configurations.base import SkillConfig
 from aea.connections.base import Connection
 from aea.identity.base import Identity
-from aea.mail.base import Envelope
-from aea.crypto.registries import make_crypto
 from aea.skills.base import Skill, SkillContext
 from aea.skills.behaviours import FSMBehaviour, State
 from aea.context.base import AgentContext
@@ -26,7 +22,7 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 openai.api_key = OPENAI_API_KEY
 
 # import functions used to build the agent's actions
-from simple_agent import (
+from simple_babyagi import (
     STOP_PROCEDURE,
     task_creation_prompt_builder,
     task_creation_handler,
@@ -63,15 +59,16 @@ action_types = {
         "handler": task_stop_or_not_handler,
     },
 }
+
 # State Machine Definition
-# End state adds the option to stop the procedure and execute task_stop_or_not
+# Ending states, adds the option to stop the procedure and execute task_stop_or_not
 if STOP_PROCEDURE:
     transitions = {
         "task_execution_1": {"done": "task_creation"},
         "task_creation": {"done": "task_execution_2"},
         "task_execution_2": {"done": "task_prioritization"},
         "task_prioritization": {"done": "task_stop_or_not"},
-        "task_stop_or_not": {"done": "task_execution", "stop": None},
+        "task_stop_or_not": {"done": "task_execution_1", "stop": None},
     }
 # runtime state transitions of the agent loop (execution, creation, execution, prioritization)
 else:
@@ -138,14 +135,12 @@ class SimpleStateBehaviour(State):
         return self._event is not None
     
 
-# make dummy concrete FSMBehaviour class for use in constructing the agent's FSM transitions/logic
+# instantiate empty FSMBehaviour class for use in constructing the agent's FSM transitions
 class MyFSMBehaviour(FSMBehaviour):
     def setup(self):
-        # dummy setup method
         pass
 
     def teardown(self):
-        # dummy teardown method
         pass
 
 # create the agent's shared state and return it, "memory" (dictionary that stores the agent's state)
@@ -163,15 +158,25 @@ def create_memory(first_task: str, objective: str,) -> dict:
     return memory
 
 
-# build the FSM object and return it, takes in the agent's shared state as an argument
-# right now this function returns a tuple of the FSM object and the agent's skill object
-# this can be split up as the Skill is needed for the aea but not the FSMBehaviour used in agent
 def build_fsm_and_skill(memory: dict) -> tuple[MyFSMBehaviour, Skill]:
-    """Build the FSM object."""
+    """Build the FSM object and the Skill object. The FSM is built by loading all the Simple state behaviours and their respective transition 
+    functions into the FSM. The Skill object is built by updating the skill behaviours with the FSM behaviour after the states/transitions 
+    have been loaded into it.
+
+    fsm, _ = build_fsm_and_skill(memory) ...to get the fsm object
+    _, skill = build_fsm_and_skill(memory) ...to get the skill object
+    
+    Args:
+        memory (dict): the agent's shared state
+
+    Returns:
+        tuple[MyFSMBehaviour, Skill]: the FSM object and the Skill object
+    """
+    # create skill and skill context
     config = SkillConfig(name="dummy", author="dummy")
     skill = Skill(configuration=config)
     skill_context = SkillContext(skill=skill)
-    # dummy agent context to utilize shared state
+    # create empty agent context to utilize shared state of Agent
     agent_context = AgentContext(
         identity=None,
         connection_status=None,
@@ -187,11 +192,13 @@ def build_fsm_and_skill(memory: dict) -> tuple[MyFSMBehaviour, Skill]:
         decision_maker_address=None,
         data_dir=None,
     )
+    # set the agent context with the built object above and shared state as the dictionary passed in, "memory"
     skill_context.set_agent_context(agent_context)
     skill_context.shared_state.update(memory)
+    # create the FSM object
     fsm = MyFSMBehaviour(name="babyAGI-loop", skill_context=skill_context)
-    print("\033[95m\033[1m" + "\n***** INITIALIZE *****" + "\033[0m\033[0m")
 
+    # load the states and transitions (SimpleStateBehaviour) into the FSM object
     for key in action_types.keys():
         if key not in transitions:
             continue
@@ -203,12 +210,11 @@ def build_fsm_and_skill(memory: dict) -> tuple[MyFSMBehaviour, Skill]:
                 str(behaviour.name), target_behaviour_name, event
             )
 
+    # update the skill behaviours with the FSM behaviour to build the skill
     skill.behaviours.update({fsm.name: fsm})
 
     return fsm, skill
 
-
-# todo: move memory into agent state's _shared_state
 
 class BabyAGI(Agent):
     """A re-implementation of the Baby AGI using the Open AEA framework."""
@@ -232,17 +238,23 @@ class BabyAGI(Agent):
         self.fsm.act()
 
     def setup(self):
-        # dummy setup method
+        # empty setup method
         pass
 
     def teardown(self):
-        # dummy teardown method
+        # empty teardown method
         pass
 
 
 def run(first_task: str, objective: str):
-    """Run babyAGI."""
+    """Run babyAGI with the given first task + objective using open-aea's "Agent" & "FSMBehaviour" classes.
 
+    Args:
+        first_task (str): the first task to be completed by the agent
+        objective (str): the objective of the agent
+    """
+
+    # Create the agent's shared state object
     memory = create_memory(first_task, objective)
 
     # Create an identity for the agent
@@ -250,7 +262,8 @@ def run(first_task: str, objective: str):
         name="baby_agi", address="my_address", public_key="my_public_key"
     )
 
-    print("\033[89m\033[1m" + "\n======== AEA-GPT ONLINE ========" + "\033[0m\033[0m")
+    print("\033[89m\033[1m" + "\n======== Agent babyAGI ONLINE ========" + "\033[0m\033[0m")
+
     # Create our Agent (without connections)
     my_agent = BabyAGI(identity, memory)
 
@@ -260,7 +273,6 @@ def run(first_task: str, objective: str):
     except KeyboardInterrupt:
         # Shut down the agent
         my_agent.stop()
-        print("\033[89m\033[1m" + "\n======== EXIT ========" + "\033[0m\033[0m")
 
 
 if __name__ == "__main__":
@@ -268,4 +280,5 @@ if __name__ == "__main__":
     try:
         run(first_task, objective)
     except KeyboardInterrupt:
+        print("\033[89m\033[1m" + "\n======== EXIT ========" + "\033[0m\033[0m")
         pass

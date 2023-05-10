@@ -1,17 +1,17 @@
 """
 Heavily inspired by: https://github.com/yoheinakajima/babyagi
 
-python simple_agent.py "develop a task list" "solve world hunger"
+python simple_babyagi.py "develop a task list" "solve world hunger"
 """
 
 import os
 import sys
 import openai
-# import pinecone
 from typing import List, Tuple, Any
 from collections import deque
 from dotenv import load_dotenv
 import time
+# import pinecone (if using pinecone)
 
 load_dotenv()
 
@@ -41,7 +41,8 @@ STOP_PROCEDURE = False
 #         PINECONE_TABLE, dimension=DIMENSION, metric=METRIC, pod_type=POD_TYPE
 #     )
 
-
+# Templates used for all the prompt types
+# This gives GPT context everytime it is called as to what step in the process of the agent loop is it acting as to provide a corresponding response
 task_creation_template = """
 You are a task creation AI that uses the result of an execution agent to create new tasks with the following objective: {objective}. 
 The last completed task has the result: {result}. This result was based on this task description: {task_description}. 
@@ -328,6 +329,9 @@ def main(first_task: str, objective: str):
     }
     # initialize the task list with the first task
     globals_["task_list"].append({"id": 1, "name": first_task})
+
+    print("\033[89m\033[1m" + "\n======== Simple Loop babyAGI ONLINE ========" + "\033[0m\033[0m")
+
     # simple agent loop
     while globals_["keep_going"]:
         # execution
@@ -373,4 +377,5 @@ if __name__ == "__main__":
     try:
         main(first_task, objective)
     except KeyboardInterrupt:
+        print("\033[89m\033[1m" + "\n======== EXIT ========" + "\033[0m\033[0m")
         pass
