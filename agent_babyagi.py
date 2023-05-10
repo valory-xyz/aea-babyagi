@@ -22,8 +22,7 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 openai.api_key = OPENAI_API_KEY
 
 # import functions used to build the agent's actions
-from simple_babyagi import (
-    STOP_PROCEDURE,
+from actions import (
     task_creation_prompt_builder,
     task_creation_handler,
     task_prioritization_prompt_builder,
@@ -33,6 +32,9 @@ from simple_babyagi import (
     task_stop_or_not_prompt_builder,
     task_stop_or_not_handler,
 )
+
+# flag to stop the procedure
+STOP_PROCEDURE = False
 
 # action types definition, each action type makes two function calls: builder & handler
 # the initial action type is execution of the first task

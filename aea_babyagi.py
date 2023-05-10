@@ -6,7 +6,9 @@ from aea_ledger_ethereum import EthereumCrypto
 from aea.aea_builder import AEABuilder
 from aea.crypto.helpers import PRIVATE_KEY_PATH_SCHEMA, create_private_key
 
-# agent.py dependencies (need new function for building skill)
+# agent_babyagi dependencies
+# build_fsm_and_skill builds the skill we add to the AEA
+# create_memory creates the shared state used by the AEA to move between actions
 from agent_babyagi import build_fsm_and_skill, create_memory
 
 # Create a dummy private key for the AEA wallet
@@ -14,7 +16,15 @@ PRIVATE_KEY_FILE = PRIVATE_KEY_PATH_SCHEMA.format(EthereumCrypto.identifier)
 create_private_key(EthereumCrypto.identifier, PRIVATE_KEY_FILE)
 
 def build_aea(first_task: str, objective: str):
+    """Build the AEA with the babyagi skill.
+    
+    Args:
+        first_task (str): the first task to be completed by the agent
+        objective (str): the objective of the agent
 
+    Returns:
+        AEA: the AEA with the babyagi skill
+    """
     # instantiate the aea builder
     builder = AEABuilder()
     # set the aea name
@@ -40,7 +50,12 @@ def build_aea(first_task: str, objective: str):
 
 
 def run(first_task: str, objective: str):
-    """Run babyAGI."""
+    """Run babyAGI.
+    
+    Args:
+        first_task (str): the first task to be completed by the agent
+        objective (str): the objective of the agent
+    """
 
     # Build AEA-GPT
     my_aea = build_aea(first_task, objective)
