@@ -20,6 +20,11 @@ poetry shell
 poetry install
 ```
 
+Import AEA packages:
+```bash
+svn export https://github.com/valory-xyz/open-aea/tags/v1.33.0/packages packages
+```
+
 Run the agents:
 ```bash
 poetry run python simple_babyagi.py "develop a task list" "solve world hunger"
