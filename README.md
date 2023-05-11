@@ -2,9 +2,7 @@
     <b>AEA BabyAGI</b>
 </h1>
 
-<p align="center">
 Adaptation of [babyagi](https://github.com/yoheinakajima/babyagi) in the [Open AEA](https://github.com/valory-xyz/open-aea) framework.
-</p>
 
 ## Agents
 - **simple_babyagi**: Adaptation of the babyAGI agent loop/functions using only the OpenAI API without extra tooling (NOTE: chromadb, pinecone, and more can be added on just as in babyagi if you want!)
