@@ -4,10 +4,13 @@
 
 ### Adaptation of [babyagi](https://github.com/yoheinakajima/babyagi) in the [Open AEA](https://github.com/valory-xyz/open-aea) framework.
 
-## Agents
-- **simple_babyagi**: Adaptation of the babyAGI agent loop/functions using only the OpenAI API without extra tooling (NOTE: chromadb, pinecone, and more can be added on just as in babyagi if you want!)
-- **agent_agi**: Inherit from Open AEA's "Agent" class to extend babyagi's functionality within simple_babyagi into an Open AEA "Agent" with Finite State Machine Behaviour (FSMBehaviour) (NOTE: this allows for defining states and state transition functions to determine how the agent loop works).
-- **aea_babyagi**: Inherit from Open AEA's "AEA" class to extend babyagi's functionality within simple_babyagi & agent_agi into an autonomous economic agent.
+## Project
+```ml
+├─ actions — "contains all the functions used to compose the low-high level actions of each agent"
+├─ simple_babyagi — "Adaptation of the babyAGI agent loop/functions using only the OpenAI API without extra tooling
+├─ agent_babyagi - "Use Open AEA's Agent class to extend simple_babyagi into an Open AEA "Agent" with Finite State Machine Behaviour
+├─ aea_babyagi - "Inherit from Open AEA's "AEA" class to extend babyagi's functionality within agent_agi into an autonomous economic agent."
+```
 
 ## Getting Started
 
