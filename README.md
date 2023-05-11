@@ -7,8 +7,8 @@
 ## Project
 ```ml
 ├─ actions — "contains all the functions used to compose the low-high level actions of each agent"
-├─ simple_babyagi — "Adaptation of the babyAGI agent loop/functions using only the OpenAI API without extra tooling
-├─ agent_babyagi - "Use Open AEA's Agent class to extend simple_babyagi into an Open AEA "Agent" with Finite State Machine Behaviour
+├─ simple_babyagi — "Adaptation of the babyAGI agent loop/functions using only the OpenAI API without extra tooling"
+├─ agent_babyagi - "Use Open AEA's Agent class to extend simple_babyagi into an Open AEA "Agent" with Finite State Machine Behaviour"
 ├─ aea_babyagi - "Inherit from Open AEA's "AEA" class to extend babyagi's functionality within agent_agi into an autonomous economic agent."
 ```
 
