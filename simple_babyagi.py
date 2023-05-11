@@ -7,16 +7,8 @@ python simple_babyagi.py "develop a task list" "solve world hunger"
 import os
 import sys
 import openai
-from collections import deque
 import time
-
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-
-# Set up OpenAI API key
-openai.api_key = OPENAI_API_KEY
-
-# flag to stop the procedure
-STOP_PROCEDURE = False
+from collections import deque
 
 # import functions used to build the agent's actions
 from actions import (
@@ -30,6 +22,13 @@ from actions import (
     task_stop_or_not_handler,
 )
 
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+# Set up OpenAI API key
+openai.api_key = OPENAI_API_KEY
+
+# flag to stop the procedure
+STOP_PROCEDURE = False
 
 # Definition of the action types for the simple agent
 action_types = {
@@ -64,9 +63,11 @@ def executor(globals_: dict, agent_type: str) -> None:
     agent = action_types[agent_type]
     # build the prompt for the corresponding action type
     builder_ = agent["prompt_builder"]
-    # create the corresponding prompt for GPT to execute the action type "agent" and load it into "prompt"
+    # create the corresponding prompt for GPT to execute the action
+    #  type "agent" and load it into "prompt"
     prompt = builder_(globals_)
-    # call GPT with the corresponding "prompt" to execute the action and load the response from the "prompt" into "response"
+    # call GPT with the corresponding "prompt" to execute the action
+    # and load the response from the "prompt" into "response"
     response = openai_call(prompt)
     # handle the response from GPT for the corresponding action type "agent"
     handler_ = agent["handler"]
@@ -75,7 +76,8 @@ def executor(globals_: dict, agent_type: str) -> None:
 
 def main(first_task: str, objective: str):
     # initialize the globals dictionary with "objective"
-    # this is simple_agent's state variable which is used to keep track of the task list, current task, and the objective so GPT can reason about them.
+    # this is simple_agent's state variable which is used to keep track of
+    # the task list, current task, and the objective so GPT can reason about them.
     globals_ = {
         "objective": objective,
         "task_list": deque([]),
@@ -86,7 +88,7 @@ def main(first_task: str, objective: str):
     # add the first task to the task list
     globals_["task_list"].append({"id": 1, "name": first_task})
 
-    print("\033[89m\033[1m" + "\n======== Simple Loop babyAGI ONLINE ========" + "\033[0m\033[0m")
+    print("\033[89m\033[1m" + "\n=== Simple Loop babyAGI ONLINE ===" + "\033[0m\033[0m")
 
     # simple agent loop
     while globals_["keep_going"]:

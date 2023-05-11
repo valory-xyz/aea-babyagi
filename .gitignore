@@ -2,4 +2,5 @@
 .env
 *.DS_Store
 /packages/
+/.ruff_cache/
 ethereum_private_key.txt

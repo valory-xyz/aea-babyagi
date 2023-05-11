@@ -1,11 +1,9 @@
-from collections import deque
-import os
-from typing import List
-import openai
-from dotenv import load_dotenv
 import sys
-
-load_dotenv()
+import os
+import openai
+from collections import deque
+from typing import List
+from dotenv import load_dotenv
 
 # AEA dependencies
 from aea.agent import Agent
@@ -15,11 +13,6 @@ from aea.identity.base import Identity
 from aea.skills.base import Skill, SkillContext
 from aea.skills.behaviours import FSMBehaviour, State
 from aea.context.base import AgentContext
-
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-
-# Set up OpenAI API key
-openai.api_key = OPENAI_API_KEY
 
 # import functions used to build the agent's actions
 from actions import (
@@ -32,6 +25,13 @@ from actions import (
     task_stop_or_not_prompt_builder,
     task_stop_or_not_handler,
 )
+
+load_dotenv()
+
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+# Set up OpenAI API key
+openai.api_key = OPENAI_API_KEY
 
 # flag to stop the procedure
 STOP_PROCEDURE = False
@@ -72,7 +72,7 @@ if STOP_PROCEDURE:
         "task_prioritization": {"done": "task_stop_or_not"},
         "task_stop_or_not": {"done": "task_execution_1", "stop": None},
     }
-# runtime state transitions of the agent loop (execution, creation, execution, prioritization)
+# runtime state transitions of loop (execution, creation, execution, prioritization)
 else:
     transitions = {
         "task_execution_1": {"done": "task_creation"},
@@ -83,7 +83,6 @@ else:
 
 
 class SimpleStateBehaviour(State):
-
     def act(self) -> None:
         """
         Act implementation.
@@ -135,9 +134,9 @@ class SimpleStateBehaviour(State):
     def is_done(self) -> bool:
         """Get is done."""
         return self._event is not None
-    
 
-# instantiate empty FSMBehaviour class for use in constructing the agent's FSM transitions
+
+# instantiate FSMBehaviour class for use in constructing the agent's FSM transitions
 class MyFSMBehaviour(FSMBehaviour):
     def setup(self):
         pass
@@ -145,29 +144,36 @@ class MyFSMBehaviour(FSMBehaviour):
     def teardown(self):
         pass
 
-# create the agent's shared state and return it, "memory" (dictionary that stores the agent's state)
-# takes in string arguments from the command line to set the first task and the objective of the agent
-def create_memory(first_task: str, objective: str,) -> dict:
+
+# create the agent's shared state and return it, "memory" is the shared state
+# takes in string arguments to set first task and the objective of the agent
+def create_memory(
+    first_task: str,
+    objective: str,
+) -> dict:
     """Create the shared memory."""
     memory = {
-            "objective": objective,
-            "task_list": deque([]),
-            "current_task": {},
-            "result": {"data": first_task},
-            "keep_going": True,
-        }
+        "objective": objective,
+        "task_list": deque([]),
+        "current_task": {},
+        "result": {"data": first_task},
+        "keep_going": True,
+    }
     memory["task_list"].append({"id": 1, "name": first_task})
     return memory
 
 
 def build_fsm_and_skill(memory: dict) -> tuple[MyFSMBehaviour, Skill]:
-    """Build the FSM object and the Skill object. The FSM is built by loading all the Simple state behaviours and their respective transition 
-    functions into the FSM. The Skill object is built by updating the skill behaviours with the FSM behaviour after the states/transitions 
-    have been loaded into it.
+    """
+    Build the FSM object and the Skill object. The FSM is built by loading
+    all the Simple state behaviours and their respective transition
+    functions into the FSM. The Skill object is built by updating the skill
+    behaviours with the FSM behaviour after the states/transitions have
+    been loaded into it.
 
     fsm, _ = build_fsm_and_skill(memory) ...to get the fsm object
     _, skill = build_fsm_and_skill(memory) ...to get the skill object
-    
+
     Args:
         memory (dict): the agent's shared state
 
@@ -182,7 +188,7 @@ def build_fsm_and_skill(memory: dict) -> tuple[MyFSMBehaviour, Skill]:
     agent_context = AgentContext(
         identity=None,
         connection_status=None,
-        outbox=None, 
+        outbox=None,
         decision_maker_message_queue=None,
         decision_maker_handler_context=None,
         task_manager=None,
@@ -194,7 +200,7 @@ def build_fsm_and_skill(memory: dict) -> tuple[MyFSMBehaviour, Skill]:
         decision_maker_address=None,
         data_dir=None,
     )
-    # set the agent context with the built object above and shared state as the dictionary passed in, "memory"
+    # set the agent context
     skill_context.set_agent_context(agent_context)
     skill_context.shared_state.update(memory)
     # create the FSM object
@@ -208,9 +214,7 @@ def build_fsm_and_skill(memory: dict) -> tuple[MyFSMBehaviour, Skill]:
         is_initial = key == initial
         fsm.register_state(str(behaviour.name), behaviour, initial=is_initial)
         for event, target_behaviour_name in transitions[key].items():
-            fsm.register_transition(
-                str(behaviour.name), target_behaviour_name, event
-            )
+            fsm.register_transition(str(behaviour.name), target_behaviour_name, event)
 
     # update the skill behaviours with the FSM behaviour to build the skill
     skill.behaviours.update({fsm.name: fsm})
@@ -249,7 +253,9 @@ class BabyAGI(Agent):
 
 
 def run(first_task: str, objective: str):
-    """Run babyAGI with the given first task + objective using open-aea's "Agent" & "FSMBehaviour" classes.
+    """
+    Run babyAGI with the given first task + objective using
+    open-aea's "Agent" & "FSMBehaviour" classes.
 
     Args:
         first_task (str): the first task to be completed by the agent
@@ -264,7 +270,7 @@ def run(first_task: str, objective: str):
         name="baby_agi", address="my_address", public_key="my_public_key"
     )
 
-    print("\033[89m\033[1m" + "\n======== Agent babyAGI ONLINE ========" + "\033[0m\033[0m")
+    print("\033[89m\033[1m" + "\n===== Agent babyAGI ONLINE =====" + "\033[0m\033[0m")
 
     # Create our Agent (without connections)
     my_agent = BabyAGI(identity, memory)

@@ -1,5 +1,6 @@
 """
-Actions: contains all the functions used to compose the low-high level actions for any agent programs that use these functions.
+Actions: contains all the functions used to compose the low-high level 
+actions for any agent programs that use these functions.
 """
 
 import os
@@ -9,7 +10,7 @@ from collections import deque
 import pinecone
 
 # pincone setup
-USE_PINECONE = False # flag to set pincone usage on or off (default: False)
+USE_PINECONE = False  # flag to set pincone usage on or off (default: False)
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
 PINECONE_ENVIRONMENT = os.getenv("PINECONE_ENVIRONMENT")
 PINECONE_TABLE = os.getenv("PINECONE_TABLE")
@@ -28,10 +29,14 @@ pinecone.init(api_key=PINECONE_API_KEY, environment=PINECONE_ENVIRONMENT)
 
 
 task_creation_template = """
-You are a task creation AI that uses the result of an execution agent to create new tasks with the following objective: {objective}. 
-The last completed task has the result: {result}. This result was based on this task description: {task_description}. 
-These are incomplete tasks: {incomplete_tasks}. Based on the result, create new tasks to be completed by the AI system that do 
-not overlap with incomplete tasks. Return the result as a list that is not numbered and simply lists each task in its own line, like:
+You are a task creation AI that uses the result of an execution agent to 
+create new tasks with the following objective: {objective}. The last 
+completed task has the result: {result}. This result was based on this
+task description: {task_description}. These are incomplete tasks: 
+{incomplete_tasks}. Based on the result, create new tasks to be completed 
+by the AI system that do not overlap with incomplete tasks. Return the 
+result as a list that is not numbered and simply lists each task in its
+own line, like:
 
 First task
 Second task
@@ -40,33 +45,42 @@ Third task
 Do not include anything else except the list in your response.
 """
 task_prioritization_template = """
-You are a task prioritization AI tasked with cleaning the formatting of and reprioritizing the following tasks: {task_names}. Consider the ultimate objective of your team: {objective}. 
+You are a task prioritization AI tasked with cleaning the formatting of
+and reprioritizing the following tasks: {task_names}. Consider the 
+ultimate objective of your team: {objective}. 
 Do not remove any tasks. Return the result as a numbered list, like:
 
 #. First task
 #. Second task
 
-Start the task list with number 1 and do not include anything else except the list in your response.
+Start the task list with number 1 and do not include anything else 
+except the list in your response.
 """
 task_execution_template = """
-You are an AI that performs one task based on the following objective: {objective}.\nTake into account these previously completed tasks: {context}...and your assigned task: {task}\n. 
-What is your response? Make sure to respond with a detailed solution to the assigned task you have been given only, and do not address any other tasks or make any lists. 
+You are an AI that performs one task based on the following objective: 
+{objective}.\nTake into account these previously completed tasks: 
+{context}...and your assigned task: {task}\n. What is your response? 
+Make sure to respond with a detailed solution to the assigned task you 
+have been given only, and do not address any other tasks or make any lists. 
 your response should be in paragraph form.
 """
 task_stop_or_not_template = """
-You are an AI that assess task completion for the following objective: {objective}. Take into account these previously completed tasks: {context}.
-Has the objective been achieved? Answer with only yes or no. Only answer with yes if you think this is the best answer possible.
+You are an AI that assess task completion for the following objective: 
+{objective}. Take into account these previously completed tasks: {context}.
+Has the objective been achieved? Answer with only yes or no. Only answer 
+with yes if you think this is the best answer possible.
 """
 
 
 def task_execution_prompt_builder(globals_: dict) -> str:
     """
-    This function builds and returns the execution prompt for GPT to take in as input when executing a task.
-    It also prints the next task in the task list.
+    This function builds and returns the execution prompt for GPT to take
+    in as input when executing a task. It also prints the next task in
+    the task list.
 
     Args:
         globals_ (dict): The globals dictionary
-    
+
     Returns:
         str: The prompt for GPT task execution
     """
@@ -85,8 +99,9 @@ def task_execution_prompt_builder(globals_: dict) -> str:
 
 def task_execution_handler(response: str, globals_: dict) -> None:
     """
-    This function handles the GPT response corresponding to the last task execution, allows for the
-    result to be further enriched and prints the resultant GPT response from executing the task. It also prints the result
+    This function handles the GPT response corresponding to the last task
+    execution, allows for the result to be further enriched and prints the
+    resultant GPT response from executing the task. It also prints the result
 
     Args:
         response (str): The GPT response from task execution
@@ -121,7 +136,8 @@ def task_execution_handler(response: str, globals_: dict) -> None:
 
 def task_creation_prompt_builder(globals_: dict) -> str:
     """
-    This function builds and returns the prompt for GPT task creation so GPT can create task lists.
+    This function builds and returns the prompt for GPT task
+    creation so GPT can create task lists.
 
     Args:
         globals_ (dict): The globals dictionary
@@ -140,7 +156,8 @@ def task_creation_prompt_builder(globals_: dict) -> str:
 
 def task_creation_handler(response: str, globals_: dict):
     """
-    This function handles the GPT response corresponding to the task creation prompt built by the task creation prompt builder and
+    This function handles the GPT response corresponding to the task
+    creation prompt built by the task creation prompt builder and
     prints the resultant GPT response that is creating new tasks.
 
     Args:
@@ -156,19 +173,22 @@ def task_creation_handler(response: str, globals_: dict):
         id_ = globals_["task_list"][-1]["id"] + 1
     else:
         id_ = 1
-    task_list = [{"id": id_ + i, "name": task_name} for i, task_name in enumerate(new_tasks)]
+    task_list = [
+        {"id": id_ + i, "name": task_name} for i, task_name in enumerate(new_tasks)
+    ]
     globals_["task_list"] = deque(task_list)
 
     print("\033[89m\033[1m" + "\nTASK LIST:" + "\033[0m\033[0m")
     for t in task_list:
         print(t["name"])
-    
+
     return "done"
 
 
 def task_prioritization_prompt_builder(globals_: dict) -> str:
     """
-    This function builds and returns the prompt for GPT task prioritization so existing tasks can be re-prioritized.
+    This function builds and returns the prompt for GPT task prioritization
+    so existing tasks can be re-prioritized.
 
     Args:
         globals_ (dict): The globals dictionary
@@ -188,7 +208,8 @@ def task_prioritization_prompt_builder(globals_: dict) -> str:
 
 def task_prioritization_handler(response: str, globals_: dict):
     """
-    This function handles the GPT response corresponding to the task prioritization prompt built by the task prioritization prompt builder and
+    This function handles the GPT response corresponding to the task
+    prioritization prompt built by the task prioritization prompt builder and
     prints the resultant GPT response that is re-prioritizing existing tasks.
     """
     new_tasks = response.split("\n")
@@ -201,7 +222,7 @@ def task_prioritization_handler(response: str, globals_: dict):
             task_list.append({"id": task_id, "name": task_name})
     globals_["task_list"] = task_list
     globals_["current_task"] = {}
-    print("\033[94m\033[1m" + "\n***** RE-PRIORITIZED TASK LIST *****\n" + "\033[0m\033[0m")
+    print("\033[94m\033[1m" + "\n***** RE-PRIORITIZED LIST *****\n" + "\033[0m\033[0m")
     for t in task_list:
         print(str(t["id"]) + ": " + t["name"])
     return "done"
@@ -231,8 +252,9 @@ def get_context(globals_: dict) -> List[Tuple[str]]:
 
 def task_stop_or_not_prompt_builder(globals_: dict) -> str:
     """
-    This function builds and returns the task stop or not prompt for GPT in order to reason about the objective completeness when 
-    the user stops the agent loop.
+    This function builds and returns the task stop or not prompt for GPT
+    in order to reason about the objective completeness when the user
+    stops the agent loop.
 
     Args:
         globals_ (dict): The globals dictionary
@@ -248,12 +270,12 @@ def task_stop_or_not_prompt_builder(globals_: dict) -> str:
 
 def task_stop_or_not_handler(response: str, globals_: dict) -> None:
     """
-    This function handles the GPT response corresponding to the task stop or not prompt built by the task stop or not prompt builder and
-    prints the resultant GPT response that is reasoning about the objective completeness when the user stops the agent loop.
+    This function handles the GPT response corresponding to the task stop
+    or not prompt built by the task stop or not prompt builder and prints
+    the resultant GPT response that is reasoning about the objective
+    completeness when the user stops the agent loop.
     """
     globals_["keep_going"] = response.strip().lower() != "yes"
-    print(
-        "\033[94m\033[1m" + "\n*****TASK CONTINUATION*****\n" + "\033[0m\033[0m"
-    )
+    print("\033[94m\033[1m" + "\n*****TASK CONTINUATION*****\n" + "\033[0m\033[0m")
     print(globals_["keep_going"])
     return "done" if globals_["keep_going"] else "stop"
