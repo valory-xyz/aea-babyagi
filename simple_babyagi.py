@@ -9,6 +9,7 @@ import sys
 import openai
 import time
 from collections import deque
+from dotenv import load_dotenv
 
 # import functions used to build the agent's actions
 from actions import (
@@ -21,6 +22,8 @@ from actions import (
     task_stop_or_not_prompt_builder,
     task_stop_or_not_handler,
 )
+
+load_dotenv()
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 

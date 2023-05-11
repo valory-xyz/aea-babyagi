@@ -14,18 +14,18 @@
 
 ## Getting Started
 
-Create a .env file from the .env.example provided in this repo that includes your OpenAI API key and other environment variables you want to use:
+Create a `.env` file from the `.env.example` provided in this repo:
+```bash
+cp .env.example .env
+```
+
+Set your OpenAI API key and, optionally, other environment variables you want to use in the `.env` file:
 ```bash
 OPENAI_API_KEY="YOUR_API_KEY"
 PINECONE_API_KEY="YOUR_API_KEY"
 ```
 
-paste your AEA's private key in ethereum_private_key.txt:
-```bash
-0x0000000000000000000000000000000000000000000000000000000000000000
-```
-
-Install project dependencies:
+Install project dependencies (you can find install instructions for Poetry [here](https://python-poetry.org/docs/)):
 ```bash
 poetry shell
 poetry install
@@ -34,6 +34,11 @@ poetry install
 Import AEA packages:
 ```bash
 svn export https://github.com/valory-xyz/open-aea/tags/v1.33.0/packages packages
+```
+
+Source the environment variables:
+``` bash
+source .env
 ```
 
 Run the agents:
@@ -46,4 +51,3 @@ poetry run python agent_babyagi.py "develop a task list" "solve world hunger"
 ```bash
 poetry run python aea_babyagi.py "develop a task list" "solve world hunger"
 ```
-
